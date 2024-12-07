@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Amplify, { Auth } from "aws-amplify";
+import awsExports from "./aws-exports";
+import { createBucket, uploadFile } from "./services/s3Service";
 
-function App() {
+Amplify.configure(awsExports);
+
+const App = () => {
+  const [user, setUser] = useState(null);
+  const [file, setFile] = useState(null);
+
+  const signIn = async () => {
+    try {
+      const user = await Auth.signIn("username", "password");
+      setUser(user);
+      const bucketName = `user-storage-${user.username}`;
+      await createBucket(bucketName);
+    } catch (err) {
+      console.error("Error signing in:", err);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file || !user) return;
+    const bucketName = `user-storage-${user.username}`;
+    await uploadFile(bucketName, file);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Cloud Storage App</h1>
+      {!user ? (
+        <button onClick={signIn}>Sign In</button>
+      ) : (
+        <>
+          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+          <button onClick={handleUpload}>Upload File</button>
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default App;
