@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import Amplify, { Auth } from "aws-amplify";
+//import { Amplify,  Auth } from "aws-amplify";
 import awsExports from "./aws-exports";
+import configure from 'aws-amplify';
 import { createBucket, uploadFile } from "./services/s3Service";
+import * as Amplify from 'aws-amplify';
+const { Auth } = Amplify;
 
 Amplify.configure(awsExports);
 
@@ -13,6 +16,7 @@ const App = () => {
     try {
       const user = await Auth.signIn("username", "password");
       setUser(user);
+      console.log('Signed in user:', user);
       const bucketName = `user-storage-${user.username}`;
       await createBucket(bucketName);
     } catch (err) {

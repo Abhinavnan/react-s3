@@ -1,5 +1,7 @@
-import { Auth } from "aws-amplify";
+//import { Auth } from "aws-amplify";
 import { S3Client, PutObjectCommand, CreateBucketCommand } from "@aws-sdk/client-s3";
+import * as Amplify from 'aws-amplify';
+const { Auth } = Amplify;
 
 const REGION = "your-region";
 
