@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-//import { Amplify,  Auth } from "aws-amplify";
+import { Amplify} from "aws-amplify";
 import awsExports from "./aws-exports";
-import configure from 'aws-amplify';
 import { createBucket, uploadFile } from "./services/s3Service";
-import * as Amplify from 'aws-amplify';
+//import * as Amplify from 'aws-amplify';
 const { Auth } = Amplify;
 
 Amplify.configure(awsExports);
